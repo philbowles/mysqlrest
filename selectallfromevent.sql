@@ -1,0 +1,1 @@
+SELECT * FROM `h4`.`event` LIMIT 1000;
