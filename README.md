@@ -1,26 +1,35 @@
 ![H4P Logo](/assets/DiagLogo.jpg)
 
-# H4Plugins NodeJS / express server for MySQL logger
+# NodeJS / express server for MySQL logging
+## Version 0.1.0
 
-## Requires the installation of
-
-* [H4 library](https://github.com/philbowles/H4)
-* [H4Plugins library](https://github.com/philbowles/h4plugins)
+Enables [H4Plugins library](https://github.com/philbowles/h4plugins) to log events to an external MySQL server. See the [example sketch](LINK T.B.A)
 
 ---
-Version **0.0.1**
 
 ## What does it do?
 
-The code opens an http port on 8266 and services POST requests in application/x-www-form-urlencoded format. The body must contain data for the following fields
+The code opens an http port on 8266 and services POST requests in `application/x-www-form-urlencoded` format. It expects a MySQL schema called `h4` with a table `event` with the following DDL:
 
-* type 
-* error
-* source
-* target
-* msg 
+```sql
+CREATE TABLE `event` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `device` varchar(16) NOT NULL,
+  `type` int NOT NULL,
+  `source` varchar(16) DEFAULT NULL,
+  `msg` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10856 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+```
 
-These are populated automatically by the H4Plugins MySQLlogger
+The POST body must contain data for the following fields:
+
+* `device`
+* `type`
+* `source`
+* `msg`
 
 ## Prerequites
  
@@ -34,41 +43,21 @@ A server running
 
 Installation of a suitable OS and the above packages is beyond the scope of this document.
 
-1. Create a database in MySQL (assumed to be named h4)
-2. Create the following schema
-
-```cpp
-use h4;
-CREATE TABLE `event` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `device` varchar(16) NOT NULL,
-  `type` int(11) NOT NULL,
-  `source` varchar(16) DEFAULT NULL,
-  `msg` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15462 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci```
-
-3. Edit routes/index.js and replace the XXXXs with your MySQL username and password
-
-```cpp
-  user: "XXXX",
-  password: "XXXX",
-```
-4. Ensure your firewall allows inbound HTTP on port 8266
-5. Start the server with `node h4`
-6. Run the [H4Plugins example H4PHttpLogger](tba) after editing the url with the domain name or IP address of your server 
+1. Create a database named h4 in MySQL
+2. Create the schema shown above
+3. Install the nodejs package [@mysql/xdevapi](https://www.npmjs.com/package/@mysql/xdevapi)
+4. Edit h4.js and replace the XXXXs with your MySQL username and password ![creds](assets/creds.jpg)
+5. Ensure your firewall allows inbound HTTP on port 8266
+6. Start the server with `node h4`
+7. Run the [H4P_RemoteLogger example]( LINK tba) after editing the url with the domain name or IP address of your server 
    
 ---
 
-(c) 2020 Phil Bowles h4plugins@gmail.com
+(c) 2021 Phil Bowles h4plugins@gmail.com
 
-* [Youtube channel (instructional videos)](https://www.youtube.com/channel/UCYi-Ko76_3p9hBUtleZRY6g)
-* [Blog](https://8266iot.blogspot.com)
 * [Facebook H4  Support / Discussion](https://www.facebook.com/groups/444344099599131/)
 * [Facebook General ESP8266 / ESP32](https://www.facebook.com/groups/2125820374390340/)
 * [Facebook ESP8266 Programming Questions](https://www.facebook.com/groups/esp8266questions/)
-* [Facebook IOT with ESP8266 (moderator)}](https://www.facebook.com/groups/1591467384241011/)
+* [Facebook IOT with ESP8266 (moderator)](https://www.facebook.com/groups/1591467384241011/)
 * [Facebook ESP Developers (moderator)](https://www.facebook.com/groups/ESP8266/)
-* [Support me on Patreon](https://patreon.com/esparto)
+* [Support me on Patreon](https://patreon.com/esparto)om/esparto)

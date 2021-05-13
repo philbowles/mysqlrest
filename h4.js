@@ -10,18 +10,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/', indexRouter);
 
-// catch 404 and forward to error handler
 app.use(function(req, res, next) {  next(createError(404)); });
 
-// error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
   res.status(err.status || 500);
-  res.send('error '+err.status);
+  res.send('error '+err.status+' '+err+' '+err.message);
 });
+
+const mysqlx = require('@mysql/xdevapi');
+
+mysqlx.getSession({
+    user: 'xxxx',
+    password: 'xxxx',
+    host: 'localhost',
+    port: '33060'
+}).then(function (session){ myTable=session.getSchema('H4').getTable('event'); });
+
 app.listen(port,()=> console.log("H4plugins listening on "+port))
-module.exports = app;
